@@ -12,6 +12,14 @@
     "not_found_handling": "single-page-application"
   },
 
+  // yarnty.com itself, by explicit decision — the tracker replaces the
+  // Coming soon page. The old landing page Worker (yarnty-app) is left
+  // deployed and untouched, and the page's exact markup is still in
+  // ../index.html, so reverting is "point the domain back".
+  "routes": [
+    { "pattern": "yarnty.com", "custom_domain": true }
+  ],
+
   "observability": {
     "enabled": true
   }
