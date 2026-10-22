@@ -1,0 +1,16 @@
+# Cloudflare Pages response headers.
+
+# The service worker must never be cached. If an old sw.js is pinned at the
+# edge or in the browser, users get stuck on a stale app and no amount of
+# reloading fixes it -- the new worker can't install because the request for
+# it is answered from cache. This is the single nastiest PWA deploy bug.
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/manifest.webmanifest
+  Cache-Control: no-cache
+
+# Vite fingerprints these filenames, so a changed file is a changed URL.
+# Safe to cache for a year.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
