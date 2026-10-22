@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
-import { openDatabase } from './db/open'
-import { getMeta, setMeta } from './db/meta'
-import { DB_VERSION } from './db/schema'
+import { DB_VERSION, getDatabase, getMeta, setMeta } from './db'
 import { useOnline } from './useOnline'
 
 /**
@@ -24,16 +22,10 @@ export function App() {
   useEffect(() => {
     let cancelled = false
 
-    openDatabase({
-      onMigrate: (info) =>
-        console.info(`[yarnty] local schema ${info.from} -> ${info.to}: ${info.describe}`),
-    })
+    getDatabase()
       .then(async (db) => {
         const count = (await getMeta<number>(db, PROBE_KEY)) ?? 0
-        if (cancelled) {
-          db.close()
-          return
-        }
+        if (cancelled) return
         setState({ status: 'ready', db, count })
       })
       .catch((error: unknown) => {
