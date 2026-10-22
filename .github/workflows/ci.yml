@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  app:
+    name: app — typecheck, test, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          # No `cache: npm` yet: it needs a committed package-lock.json.
+          # Add it once the lockfile lands.
+
+      - name: Install
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install --no-audit --no-fund; fi
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # The local-schema migration tests. These guard the one bug class that
+      # can silently eat a user's unsynced offline rows, so a red run here
+      # blocks the merge. See DECISIONS.md section 7.
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build

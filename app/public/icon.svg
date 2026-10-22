@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="YarnTy logo">
+  <rect width="200" height="200" rx="44" fill="#fcc6cc"/>
+  <polyline points="51,83 100,38.5 149,83" fill="none" stroke="#c60726" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="100" cy="111" r="31" fill="#ea7480" stroke="#c60726" stroke-width="4.5"/>
+  <g fill="none" stroke="#c60726" stroke-width="3.6" stroke-linecap="round">
+    <path d="M74 101 Q100 89 126 101"/>
+    <path d="M71 114 Q100 103 128 112"/>
+    <path d="M77 128 Q100 118 123 127"/>
+  </g>
+  <path d="M125 134 C140 136 151 141 151 152 C151 162 140 166 131 162 C122 158 122 151 128 149" fill="none" stroke="#c60726" stroke-width="3.4" stroke-linecap="round"/>
+</svg>

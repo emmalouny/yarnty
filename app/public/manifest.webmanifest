@@ -1,0 +1,17 @@
+{
+  "name": "YarnTŷ",
+  "short_name": "YarnTŷ",
+  "description": "A knitting and crochet project tracker that works without signal.",
+  "lang": "en-GB",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fcc6cc",
+  "theme_color": "#fcc6cc",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/maskable-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

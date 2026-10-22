@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Node
+node_modules/
+dist/
+
+# Local env — never commit secrets
+.env
+.env.*
+!.env.example
