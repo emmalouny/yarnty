@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           # Single source of truth, so CI and the dev machine cannot drift.
-          node-version-file: .node-version
+          node-version-file: app/.node-version
           cache: npm
           cache-dependency-path: app/package-lock.json
 
