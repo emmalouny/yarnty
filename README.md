@@ -54,12 +54,13 @@ Pushes to `main` deploy themselves via GitHub Actions — but only after
 typecheck, tests and build pass. Cloudflare's own Git integration would run the
 build and skip the tests, which would let a broken local-schema migration ship.
 
-The app is an assets-only Cloudflare Worker called `yarnty-tracker`
-(`app/wrangler.jsonc`). It is intentionally unlisted — not linked from
-anywhere — until there is a real tracker to show.
+The app is an assets-only Cloudflare Worker called `yarnty-tracker`, served at
+**dev.yarnty.com** (`app/wrangler.jsonc`). It stays there until the tracker is
+good enough to be the product.
 
-`yarnty.com` is a **different**, manually-uploaded Worker and is not wired to
-this repo, so editing `index.html` here does not change the live landing page.
+`yarnty.com` keeps the Coming soon page. That is a **different**,
+manually-uploaded Worker and is not wired to this repo, so editing
+`index.html` here does not change the live landing page.
 
 Requires two repository secrets: `CLOUDFLARE_API_TOKEN` and
 `CLOUDFLARE_ACCOUNT_ID`.
