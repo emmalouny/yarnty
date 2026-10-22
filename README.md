@@ -66,10 +66,14 @@ Requires two repository secrets: `CLOUDFLARE_API_TOKEN` and
 
 ## Status
 
-**Week 1 of 12.** The shell only: an installable PWA that survives an offline
-reload, over a properly versioned IndexedDB store with a tested `v1 → v2`
-upgrade path. The round counter on screen is a throwaway probe and is deleted
-in week 2, when real projects and sections arrive.
+**Week 2 of 12.** A working local tracker: projects, sections with optional
+row targets, a thumb-sized counter, and repeat reminders ("decrease every 6th
+row from row 12"). Everything lives in IndexedDB and works with no signal.
+Nothing syncs yet — that is month 2.
+
+Counts are never stored as bare state. Each tap appends an event to a log and
+updates a cached count in the same transaction, so the two cannot drift. The
+log is what will sync later, because increments merge without conflict.
 
 Deliberately **not** built yet, with reasons: the open pattern library, yarn
 and stash, in-app community, native apps. See

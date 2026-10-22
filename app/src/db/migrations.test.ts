@@ -83,12 +83,41 @@ describe('local schema', () => {
     const factory = freshFactory()
     const applied: number[] = []
     const db = await openDatabase({
-      version: 2,
+      version: 3,
       factory,
       onMigrate: (info) => applied.push(info.to),
     })
-    expect(applied).toEqual([1, 2])
+    expect(applied).toEqual([1, 2, 3])
     db.close()
+  })
+
+  /**
+   * The first migration that does real work. Every device that opened
+   * yarnty.com during week 1 carries a dead probe key; this removes it
+   * without touching anything else the device is holding.
+   */
+  it('clears the week 1 probe key at v3 and leaves real work alone', async () => {
+    const factory = freshFactory()
+
+    const v2 = await openDatabase({ version: 2, factory })
+    await put(v2, STORES.meta, { key: 'week1_probe_count', value: 41 })
+    await put(v2, STORES.meta, { key: 'sync_cursor', value: 'keep-me' })
+    await put(v2, STORES.pendingEvents, {
+      client_event_id: 'event-1',
+      section_id: 'section-1',
+      type: 'increment',
+      delta: 1,
+      occurred_at: '2026-10-22T00:00:01.000Z',
+    })
+    v2.close()
+
+    const v3 = await openDatabase({ version: 3, factory })
+
+    const meta = await getAll<{ key: string; value: unknown }>(v3, STORES.meta)
+    expect(meta.map((row) => row.key)).toEqual(['sync_cursor'])
+    expect(await getAll(v3, STORES.pendingEvents)).toHaveLength(1)
+
+    v3.close()
   })
 
   it('refuses a version with no matching migration', async () => {

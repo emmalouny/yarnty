@@ -14,7 +14,7 @@
 export const DB_NAME = 'yarnty'
 
 /** Current expected local schema version. */
-export const DB_VERSION = 2
+export const DB_VERSION = 3
 
 export const STORES = {
   projects: 'projects',

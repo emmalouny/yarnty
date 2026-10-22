@@ -1,6 +1,16 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { App } from './App'
+
+// Self-hosted, bundled and fingerprinted by Vite. Deliberately not Google
+// Fonts: an offline-first app cannot fetch a stylesheet from another origin,
+// so the brand would break in exactly the places this app is meant to work.
+// latin-only: the full package also ships Devanagari, which trebles the
+// font payload for glyphs this app will never render.
+import '@fontsource/poppins/latin-400.css'
+import '@fontsource/poppins/latin-600.css'
+import '@fontsource/poppins/latin-700.css'
+
 import './app.css'
 
 const root = document.getElementById('root')

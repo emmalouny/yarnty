@@ -45,6 +45,17 @@ export const migrations: Migration[] = [
       // rows, upgrades to v2, and asserts the rows survived.
     },
   },
+  {
+    to: 3,
+    describe: 'remove the week 1 probe counter from meta',
+    run: (_db, tx) => {
+      // The week 1 shell stored a throwaway count under this key. Every
+      // device that visited yarnty.com has one. Deleting it here is the
+      // first migration that does real work, which is the point of having
+      // proven the mechanism on a no-op first.
+      tx.objectStore(STORES.meta).delete('week1_probe_count')
+    },
+  },
 ]
 
 /** Migrations needed to go from `fromVersion` up to `toVersion`, in order. */
