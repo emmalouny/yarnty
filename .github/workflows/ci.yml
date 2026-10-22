@@ -17,13 +17,13 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          # No `cache: npm` yet: it needs a committed package-lock.json.
-          # Add it once the lockfile lands.
+          # Single source of truth, so CI and the dev machine cannot drift.
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: app/package-lock.json
 
       - name: Install
-        run: |
-          if [ -f package-lock.json ]; then npm ci; else npm install --no-audit --no-fund; fi
+        run: npm ci
 
       - name: Typecheck
         run: npm run typecheck
