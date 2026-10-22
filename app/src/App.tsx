@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
 import { DB_VERSION, getDatabase, getMeta, setMeta } from './db'
+import { SocialLinks } from './SocialLinks'
 import { useOnline } from './useOnline'
 
 /**
- * Week 1 is the shell, not the product. The counter below is a throwaway
- * probe that answers one question: does a value written on this device
- * survive an offline reload? It is deleted in week 2, when real projects
- * and sections arrive. See DECISIONS.md section 12.
+ * This page is yarnty.com, so it is written for a knitter arriving from
+ * TikTok rather than for whoever is building it. The counter stays because
+ * it is genuinely usable and it is how the offline behaviour gets tested on
+ * a real phone — but it is framed as the first piece of the tracker, not as
+ * a development probe.
  */
-const PROBE_KEY = 'week1_probe_count'
+const COUNT_KEY = 'week1_probe_count'
 
 type State =
   | { status: 'loading' }
@@ -24,7 +26,7 @@ export function App() {
 
     getDatabase()
       .then(async (db) => {
-        const count = (await getMeta<number>(db, PROBE_KEY)) ?? 0
+        const count = (await getMeta<number>(db, COUNT_KEY)) ?? 0
         if (cancelled) return
         setState({ status: 'ready', db, count })
       })
@@ -45,51 +47,67 @@ export function App() {
     if (state.status !== 'ready') return
     const next = state.count + 1
     // Written before the UI updates: if the write fails the number must not
-    // move. Getting this habit right now matters more than it looks -- in
-    // week 2 the same shape persists counter events a user cannot afford
-    // to lose.
-    await setMeta(state.db, PROBE_KEY, next)
+    // move. The same shape persists counter events in week 2, where losing
+    // one costs somebody a row of knitting.
+    await setMeta(state.db, COUNT_KEY, next)
     setState({ ...state, count: next })
   }
 
-  if (state.status === 'loading') {
-    return <main className="shell" aria-busy="true"><p>Opening your local database…</p></main>
-  }
-
-  if (state.status === 'error') {
-    return (
-      <main className="shell">
-        <h1>YarnTŷ</h1>
-        <p className="error" role="alert">{state.message}</p>
-      </main>
-    )
+  async function reset() {
+    if (state.status !== 'ready') return
+    await setMeta(state.db, COUNT_KEY, 0)
+    setState({ ...state, count: 0 })
   }
 
   return (
     <main className="shell">
       <header className="lockup">
-        <img className="icon" src="/icon.svg" alt="" width="56" height="56" />
+        <img className="icon" src="/icon.svg" alt="" width="52" height="52" />
         <h1>YarnTŷ</h1>
       </header>
 
       <p className="tagline">
-        Week 1: the shell. No tracker yet — on purpose.
+        A knitting and crochet project tracker that works without signal.
       </p>
 
-      <button className="counter" onClick={increment}>
-        <span className="counter-value">{state.count}</span>
-        <span className="counter-label">tap to count</span>
-      </button>
-
-      <p className="proof">
-        Reload with the wifi off. The number should still be {state.count}.
+      <p className="early">
+        Early build — made in Wales, for knitters and crocheters everywhere.
+        The full project tracker is on its way. Here's the first piece of it.
       </p>
 
-      <footer className="status">
+      {state.status === 'loading' && <p className="muted" aria-busy="true">Loading…</p>}
+
+      {state.status === 'error' && (
+        <p className="error" role="alert">
+          Something went wrong starting up: {state.message}
+        </p>
+      )}
+
+      {state.status === 'ready' && (
+        <>
+          <button className="counter" onClick={increment} aria-label="Count a row">
+            <span className="counter-value">{state.count}</span>
+            <span className="counter-label">tap to count rows</span>
+          </button>
+
+          <div className="counter-actions">
+            <button className="link-button" onClick={reset} disabled={state.count === 0}>
+              Reset
+            </button>
+          </div>
+
+          <p className="muted">
+            Your count is saved on this device and keeps working with no signal.
+            Add YarnTŷ to your home screen and take it on the bus.
+          </p>
+        </>
+      )}
+
+      <SocialLinks />
+
+      <footer className="status" title={`local schema v${DB_VERSION}`}>
         <span className={online ? 'dot online' : 'dot offline'} aria-hidden="true" />
-        <span>{online ? 'online' : 'offline — still working'}</span>
-        <span className="sep">·</span>
-        <span>local schema v{DB_VERSION}</span>
+        <span>{online ? 'Online' : 'Offline — still counting'}</span>
       </footer>
     </main>
   )

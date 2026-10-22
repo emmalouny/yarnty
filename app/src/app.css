@@ -17,7 +17,11 @@
 }
 
 * { box-sizing: border-box; margin: 0; }
-html, body, #root { height: 100%; }
+
+/* Deliberately NOT height: 100%. The page is now taller than a phone
+   viewport, and a fixed height clips the overflow instead of scrolling it —
+   which hid the status line entirely. */
+html, body, #root { min-height: 100%; }
 
 body {
   background: var(--bg);
@@ -27,12 +31,12 @@ body {
 }
 
 .shell {
-  min-height: 100%;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 18px;
   padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
   text-align: center;
 }
@@ -48,7 +52,21 @@ h1 {
   line-height: 1;
 }
 
-.tagline { font-size: 15px; opacity: 0.75; max-width: 28ch; }
+.tagline {
+  font-size: clamp(16px, 4.2vw, 19px);
+  font-weight: 700;
+  max-width: 24ch;
+  line-height: 1.35;
+}
+
+.early {
+  font-size: 14px;
+  opacity: 0.75;
+  max-width: 34ch;
+  line-height: 1.5;
+}
+
+.muted { font-size: 13px; opacity: 0.6; max-width: 32ch; line-height: 1.5; }
 
 /*
  * Sized and placed for a thumb while the other hand is holding needles.
@@ -86,7 +104,47 @@ h1 {
 
 .counter-label { font-size: 13px; text-transform: lowercase; opacity: 0.6; }
 
-.proof { font-size: 13px; opacity: 0.6; max-width: 32ch; }
+.counter-actions { margin-top: -8px; }
+
+.link-button {
+  appearance: none;
+  background: none;
+  border: 0;
+  color: var(--ink);
+  opacity: 0.55;
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+.link-button:disabled { opacity: 0.25; cursor: default; text-decoration: none; }
+.link-button:not(:disabled):hover { opacity: 0.9; }
+
+.social { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  border-radius: 999px;
+  border: 2px solid var(--red);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 100ms ease-out, color 100ms ease-out;
+}
+
+.social-link.primary { background: var(--red); color: var(--bg); }
+.social-link svg { width: 17px; height: 17px; fill: currentColor; }
+
+.social-link:not(.primary):hover,
+.social-link:not(.primary):focus-visible { background: var(--red); color: var(--bg); }
+.social-link.primary:hover, .social-link.primary:focus-visible { filter: brightness(1.12); }
+.social-link:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
 
 .status {
   display: flex;
