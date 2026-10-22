@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "yarnty-tracker",
+  "compatibility_date": "2026-10-22",
+
+  // An assets-only Worker: no server code, just the built PWA. The _headers
+  // file in public/ still applies, which is what keeps sw.js uncached.
+  "assets": {
+    "directory": "./dist",
+    // Unknown paths fall back to index.html so client-side routes work when
+    // they arrive in week 2.
+    "not_found_handling": "single-page-application"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}

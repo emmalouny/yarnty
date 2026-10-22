@@ -161,11 +161,23 @@ upgrade drops them — exactly the failure mode the event log exists to prevent.
 | Local store | IndexedDB, versioned | §7 |
 | Images | **Cloudflare R2** | No egress fees; a photo feed is all egress |
 | API host | **Fly.io** | |
-| Static/PWA | **Cloudflare Pages** | |
+| Static/PWA | **Cloudflare Workers** (static assets) | Project `yarnty-tracker`. Pages in §8 originally; switched because the account already runs Workers and Cloudflare steers new static sites there |
 | Email | Resend or Postmark free tier | Not raw SMTP |
 | Errors | **Sentry**, API + client | §10 |
+| Deploy | **GitHub Actions + Wrangler** | Not Cloudflare's Git integration |
 
 Cost: roughly £0–15/month, inside the £15–25 budget.
+
+**Deploy runs from GitHub Actions, not Cloudflare's Git integration.** Cloudflare's
+own builder runs the build but not the test suite, so a change that broke the
+local-schema migrations would ship regardless. Driving the deploy from Actions
+makes `deploy` depend on typecheck and tests passing — the suite that protects
+users' unsynced rows becomes a release gate rather than a report. Secondary
+benefit: no Cloudflare GitHub app, one pipeline to debug.
+
+**yarnty.com is a separate, manually-uploaded Worker (`yarnty-app`) and is not
+connected to this repo.** Editing `index.html` in git does not change the live
+landing page. Connecting it is deliberate outstanding work, not an oversight.
 
 **Go:** the goal to learn Go is real, but it is quarantined. Phase 1 ships in Python
 with Pillow doing images. Once that works end to end, the **image service** gets

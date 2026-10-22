@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   app:
     name: app — typecheck, test, build
@@ -36,3 +39,36 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # Deploys only after typecheck, tests and build are green. Cloudflare's own
+  # Git integration would run the build but not the tests, so a change that
+  # broke the local-schema migrations would ship anyway. Here the suite that
+  # protects users' unsynced rows is a release gate, not a report.
+  deploy:
+    name: deploy to Cloudflare
+    needs: app
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: app/.node-version
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install
+        run: npm ci
+        working-directory: app
+
+      - name: Build
+        run: npm run build
+        working-directory: app
+
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: app
+          command: deploy
