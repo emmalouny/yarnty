@@ -161,7 +161,7 @@ upgrade drops them — exactly the failure mode the event log exists to prevent.
 | Local store | IndexedDB, versioned | §7 |
 | Images | **Cloudflare R2** | No egress fees; a photo feed is all egress |
 | API host | **Fly.io** | |
-| Static/PWA | **Cloudflare Workers** (static assets) | Project `yarnty-tracker`. Pages in §8 originally; switched because the account already runs Workers and Cloudflare steers new static sites there |
+| Static/PWA | **Cloudflare Workers** (static assets) | Project `yarnty-tracker` on `dev.yarnty.com`. Pages in §8 originally; switched because the account already runs Workers and Cloudflare steers new static sites there |
 | Email | Resend or Postmark free tier | Not raw SMTP |
 | Errors | **Sentry**, API + client | §10 |
 | Deploy | **GitHub Actions + Wrangler** | Not Cloudflare's Git integration |
@@ -179,7 +179,10 @@ benefit: no Cloudflare GitHub app, one pipeline to debug.
 connected to this repo.** Editing `index.html` in git does not change the live
 landing page. Connecting it is deliberate outstanding work, not an oversight.
 
-The tracker is live, unlisted, at **https://yarnty-tracker.yarntyadmin.workers.dev**.
+The tracker is live at **https://dev.yarnty.com** while it is being built.
+**yarnty.com keeps the Coming soon page** until the tracker is good enough to
+be the product; promoting it then means swapping the route in
+`app/wrangler.jsonc` and detaching the domain from the landing page Worker.
 Verified on deploy: `_headers` is honoured by Workers static assets, so `/sw.js`
 returns `no-cache` and `/assets/*` returns `immutable`.
 

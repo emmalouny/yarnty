@@ -54,22 +54,27 @@ Pushes to `main` deploy themselves via GitHub Actions — but only after
 typecheck, tests and build pass. Cloudflare's own Git integration would run the
 build and skip the tests, which would let a broken local-schema migration ship.
 
-The app is an assets-only Cloudflare Worker called `yarnty-tracker`
-(`app/wrangler.jsonc`). It is intentionally unlisted — not linked from
-anywhere — until there is a real tracker to show.
+The app is an assets-only Cloudflare Worker called `yarnty-tracker`, served at
+**dev.yarnty.com** (`app/wrangler.jsonc`). It stays there until the tracker is
+good enough to be the product.
 
-`yarnty.com` is a **different**, manually-uploaded Worker and is not wired to
-this repo, so editing `index.html` here does not change the live landing page.
+`yarnty.com` keeps the Coming soon page. That is a **different**,
+manually-uploaded Worker and is not wired to this repo, so editing
+`index.html` here does not change the live landing page.
 
 Requires two repository secrets: `CLOUDFLARE_API_TOKEN` and
 `CLOUDFLARE_ACCOUNT_ID`.
 
 ## Status
 
-**Week 1 of 12.** The shell only: an installable PWA that survives an offline
-reload, over a properly versioned IndexedDB store with a tested `v1 → v2`
-upgrade path. The round counter on screen is a throwaway probe and is deleted
-in week 2, when real projects and sections arrive.
+**Week 2 of 12.** A working local tracker: projects, sections with optional
+row targets, a thumb-sized counter, and repeat reminders ("decrease every 6th
+row from row 12"). Everything lives in IndexedDB and works with no signal.
+Nothing syncs yet — that is month 2.
+
+Counts are never stored as bare state. Each tap appends an event to a log and
+updates a cached count in the same transaction, so the two cannot drift. The
+log is what will sync later, because increments merge without conflict.
 
 Deliberately **not** built yet, with reasons: the open pattern library, yarn
 and stash, in-app community, native apps. See

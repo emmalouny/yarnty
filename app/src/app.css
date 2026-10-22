@@ -1,10 +1,11 @@
-/* Brand tokens lifted from the landing page so the two feel like one product. */
+/* Brand tokens, shared with the original landing page. */
 :root {
   --bg: #fcc6cc;
   --ball: #ea7480;
   --red: #c60726;
   --ink: #2b1a1d;
   --surface: #fff2f4;
+  --line: rgba(198, 7, 38, 0.18);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -13,72 +14,143 @@
     --red: #f0475f;
     --ink: #fcc6cc;
     --surface: #2a2426;
+    --line: rgba(240, 71, 95, 0.22);
   }
 }
 
 * { box-sizing: border-box; margin: 0; }
 
-/* Deliberately NOT height: 100%. The page is now taller than a phone
-   viewport, and a fixed height clips the overflow instead of scrolling it —
-   which hid the status line entirely. */
+/* Deliberately NOT height: 100%. Content taller than the viewport must
+   scroll, not be clipped — a fixed height silently hid the footer. */
 html, body, #root { min-height: 100%; }
 
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: "Poppins", system-ui, -apple-system, Arial, sans-serif;
+  font-family: 'Poppins', system-ui, -apple-system, Arial, sans-serif;
   -webkit-text-size-adjust: 100%;
 }
 
-.shell {
+.app {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 18px;
-  padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+  gap: 20px;
+  padding: max(20px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
+  max-width: 560px;
+  margin: 0 auto;
   text-align: center;
 }
 
-.lockup { display: flex; align-items: center; gap: 12px; }
-.icon { border-radius: 12px; }
+.app-main { width: 100%; flex: 1; }
 
-h1 {
-  font-size: clamp(32px, 9vw, 48px);
+/* Header -------------------------------------------------------------- */
+
+.lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 0;
+  padding: 4px;
+  cursor: pointer;
+  color: inherit;
+}
+
+.icon { border-radius: 10px; }
+
+.wordmark {
+  font-size: 30px;
   font-weight: 700;
   color: var(--red);
   letter-spacing: -0.5px;
-  line-height: 1;
 }
 
 .tagline {
   font-size: clamp(16px, 4.2vw, 19px);
-  font-weight: 700;
-  max-width: 24ch;
+  font-weight: 600;
+  max-width: 26ch;
   line-height: 1.35;
+  margin: 0 auto;
 }
 
-.early {
-  font-size: 14px;
-  opacity: 0.75;
-  max-width: 34ch;
-  line-height: 1.5;
+/* Panels -------------------------------------------------------------- */
+
+.panel { display: flex; flex-direction: column; gap: 16px; align-items: center; width: 100%; }
+.panel-title { font-size: 20px; font-weight: 700; }
+
+.sub-panel {
+  width: 100%;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
 }
 
-.muted { font-size: 13px; opacity: 0.6; max-width: 32ch; line-height: 1.5; }
+.sub-title { font-size: 14px; font-weight: 600; opacity: 0.75; }
 
-/*
- * Sized and placed for a thumb while the other hand is holding needles.
- * This is the one piece of week 1 that can only be judged by knitting.
- */
+.muted { font-size: 13px; opacity: 0.65; max-width: 34ch; line-height: 1.5; }
+.muted.small { font-size: 12px; }
+.back { align-self: flex-start; }
+
+/* Project list -------------------------------------------------------- */
+
+.project-list { list-style: none; padding: 0; width: 100%; display: grid; gap: 10px; }
+
+.project-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+}
+
+.project-card:hover, .project-card:focus-visible { border-color: var(--red); outline: none; }
+.project-title { font-weight: 600; font-size: 16px; }
+.project-meta { font-size: 13px; opacity: 0.65; }
+.project-yarn { font-size: 12px; opacity: 0.5; }
+
+/* The counter --------------------------------------------------------- */
+
+.active-section { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.section-name { font-size: 16px; font-weight: 600; opacity: 0.8; }
+
+.reminder-slot {
+  width: 100%;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reminder-due {
+  width: 100%;
+  background: var(--red);
+  color: var(--bg);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Sized and placed for a thumb while the other hand holds needles. */
 .counter {
   appearance: none;
   border: 3px solid var(--red);
   background: var(--surface);
   color: var(--ink);
   border-radius: 999px;
-  width: min(70vw, 260px);
+  width: min(72vw, 250px);
   aspect-ratio: 1;
   display: flex;
   flex-direction: column;
@@ -95,70 +167,140 @@ h1 {
 .counter:focus-visible { outline: 3px solid var(--red); outline-offset: 4px; }
 
 .counter-value {
-  font-size: clamp(56px, 18vw, 88px);
+  font-size: clamp(54px, 17vw, 84px);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   color: var(--red);
 }
 
-.counter-label { font-size: 13px; text-transform: lowercase; opacity: 0.6; }
+.counter-label { font-size: 13px; opacity: 0.6; }
 
-.counter-actions { margin-top: -8px; }
+.progress { width: min(72vw, 250px); height: 6px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.progress-fill { height: 100%; background: var(--red); transition: width 150ms ease-out; }
+
+.counter-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+
+/* Section switcher ---------------------------------------------------- */
+
+.section-switcher { list-style: none; padding: 0; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 2px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.chip.active { border-color: var(--red); background: var(--surface); font-weight: 600; }
+.chip-count { font-variant-numeric: tabular-nums; opacity: 0.6; }
+
+.reminder-list { list-style: none; padding: 0; width: 100%; display: grid; gap: 8px; font-size: 13px; }
+
+.reminder-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+
+/* Forms --------------------------------------------------------------- */
+
+.stacked-form { width: 100%; display: flex; flex-direction: column; gap: 6px; text-align: left; }
+.stacked-form label { font-size: 12px; opacity: 0.7; }
+.inline-form { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
+
+input {
+  font: inherit;
+  font-size: 16px; /* 16px stops iOS zooming on focus */
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  width: 100%;
+}
+
+input:focus-visible { outline: none; border-color: var(--red); }
+
+.field-row { display: flex; gap: 10px; }
+.field-row > div { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.field-suffix { font-size: 12px; opacity: 0.6; }
+.form-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+
+.btn {
+  appearance: none;
+  border: 2px solid var(--red);
+  background: var(--red);
+  color: var(--bg);
+  border-radius: 999px;
+  padding: 11px 20px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn.small { padding: 8px 16px; font-size: 14px; }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.btn:not(:disabled):hover { filter: brightness(1.1); }
+.btn.danger-btn { background: transparent; color: var(--red); }
 
 .link-button {
   appearance: none;
   background: none;
   border: 0;
   color: var(--ink);
-  opacity: 0.55;
+  opacity: 0.6;
   font: inherit;
   font-size: 13px;
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
-  padding: 6px 10px;
+  padding: 7px 9px;
 }
 
 .link-button:disabled { opacity: 0.25; cursor: default; text-decoration: none; }
-.link-button:not(:disabled):hover { opacity: 0.9; }
+.link-button:not(:disabled):hover { opacity: 0.95; }
 
-.social { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.danger { margin-top: 10px; }
+
+/* Footer -------------------------------------------------------------- */
+
+.app-footer { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; padding-top: 10px; }
+.status { display: flex; align-items: center; gap: 8px; font-size: 12px; opacity: 0.7; }
+.dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot.online { background: #2e7d32; }
+.dot.offline { background: var(--red); }
+
+.social { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 
 .social-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 9px 15px;
+  gap: 7px;
+  padding: 8px 13px;
   border-radius: 999px;
   border: 2px solid var(--red);
   color: var(--ink);
   text-decoration: none;
-  font-size: 14px;
-  transition: background 100ms ease-out, color 100ms ease-out;
+  font-size: 13px;
 }
 
 .social-link.primary { background: var(--red); color: var(--bg); }
-.social-link svg { width: 17px; height: 17px; fill: currentColor; }
-
-.social-link:not(.primary):hover,
-.social-link:not(.primary):focus-visible { background: var(--red); color: var(--bg); }
-.social-link.primary:hover, .social-link.primary:focus-visible { filter: brightness(1.12); }
-.social-link:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
-
-.status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-.sep { opacity: 0.5; }
-
-.dot { width: 8px; height: 8px; border-radius: 50%; }
-.dot.online { background: #2e7d32; }
-.dot.offline { background: var(--red); }
+.social-link svg { width: 16px; height: 16px; fill: currentColor; }
+.social-link:not(.primary):hover { background: var(--red); color: var(--bg); }
 
 .error {
   background: var(--surface);
@@ -167,4 +309,12 @@ h1 {
   padding: 12px 16px;
   max-width: 40ch;
   font-size: 14px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
 }
