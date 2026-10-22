@@ -179,6 +179,21 @@ benefit: no Cloudflare GitHub app, one pipeline to debug.
 connected to this repo.** Editing `index.html` in git does not change the live
 landing page. Connecting it is deliberate outstanding work, not an oversight.
 
+The tracker is live, unlisted, at **https://yarnty-tracker.yarntyadmin.workers.dev**.
+Verified on deploy: `_headers` is honoured by Workers static assets, so `/sw.js`
+returns `no-cache` and `/assets/*` returns `immutable`.
+
+### ⚠️ The Cloudflare API token expires 22 October 2027
+
+`CLOUDFLARE_API_TOKEN` (named `github-actions-yarnty-tracker`, an account token)
+was given a one-year life rather than "no expiration", because a permanent
+credential with account-wide Workers write access living in a GitHub secret is
+worth putting an end date on.
+
+When it expires, deploys fail with an opaque auth error. Roll the token in the
+Cloudflare dashboard and update the repository secret. Recorded here so that
+day is a two-minute fix rather than an afternoon.
+
 **Go:** the goal to learn Go is real, but it is quarantined. Phase 1 ships in Python
 with Pillow doing images. Once that works end to end, the **image service** gets
 rewritten in Go — accept upload, strip EXIF, generate thumbnails, write to R2. No
